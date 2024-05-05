@@ -6,6 +6,7 @@
   "files": [
     "dist"
   ],
+  "types": "./dist/watermarking.d.ts",
   "main": "./dist/web-digital-watermarking.umd.cjs",
   "module": "./dist/web-digital-watermarking.js",
   "exports": {
@@ -22,7 +23,8 @@
   },
   "devDependencies": {
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-dts": "^3.9.0"
   },
   "dependencies": {
     "@anpanman/opencv_ts": "^1.0.2",
