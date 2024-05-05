@@ -1,7 +1,14 @@
 {
   "name": "web-digital-watermarking",
+  "sideEffects": false,
   "version": "1.0.0",
   "type": "module",
+  "keywords": [
+    "digital-watermarking",
+    "watermarking",
+    "opencv"
+  ],
+  "license": "MIT",
   "author": {
     "email": "mizuka.wu@outlook.com",
     "name": "mizuka.wu",
