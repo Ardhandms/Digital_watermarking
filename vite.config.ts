@@ -1,16 +1,28 @@
-import { build, defineConfig } from 'vite';
+import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { resolve } from 'path'
+import wasm from 'vite-plugin-wasm';
+import commonjs from 'vite-plugin-commonjs';
+import { resolve } from 'path';
 
-export default {
+export default defineConfig({
     build: {
+        target: 'esnext',
         lib: {
             entry: resolve(__dirname, './src/lib/watermarking.ts'),
             name: 'web-digital-watermarking',
             fileName: 'web-digital-watermarking'
         }
     },
-    plugins: [dts({
-        include: [resolve(__dirname, 'src/lib/**/*.ts')]
-    })]
-}
+    define: {
+        global: 'window'
+    },
+    optimizeDeps: {
+    },
+    plugins: [
+        dts({
+            include: [resolve(__dirname, 'src/lib/**/*.ts')]
+        }),
+        wasm(),
+        commonjs(),
+    ]
+})

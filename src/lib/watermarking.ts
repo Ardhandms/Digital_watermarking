@@ -1,8 +1,8 @@
 /* eslint-disable new-cap */
 /* eslint-disable camelcase */
-import Jimp from 'jimp'
-import cv, { Mat } from '@anpanman/opencv_ts'
-import { Buffer } from 'buffer'
+import 'jimp/browser/lib/jimp';
+import cv, { Mat } from '@anpanman/opencv_ts';
+import { Buffer } from 'buffer';
 
 export const status = {
   loaded: false,
