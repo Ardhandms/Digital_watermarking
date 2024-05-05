@@ -1,3 +1,5 @@
+import Viewer from 'viewerjs';
+import 'viewerjs/dist/viewer.min.css';
 import './style.css'
 import './helper/console'
 import typescriptLogo from './typescript.svg'
@@ -14,9 +16,13 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
     <div id="info">
       <div id="result">
         <h3>encoded</h3>
-        <div id="encode_result"></div>
+        <div id="encode_result">
+          <img />
+        </div>
         <h3>decoded</h3>
-        <div id="decode_result"></div>
+        <div id="decode_result">
+          <img />
+        </div>
       </div>
       <div id="logs">
         <h3>Logs</h3>
@@ -53,14 +59,14 @@ if (input) {
 
       const watermarkEl = document.getElementById('watermark') as HTMLInputElement;
 
-      try {
-        console.log('start add watermark to file');
-        await encode(file, watermarkEl.value || 'watermark');
-        console.log('add watermark success');
-      } catch (e) {
-        console.error(e);
-        console.log('add watermark error');
-      }
+      console.log('start add watermark to file');
+      const url = await encode(file, watermarkEl.value || 'watermark');
+      console.log('add watermark to file surrcee');
+
+      // 加载结果
+      const result = document.querySelector('#encode_result img') as HTMLImageElement;
+      result.src = url;
+      new Viewer(result)
     }
   }
 }

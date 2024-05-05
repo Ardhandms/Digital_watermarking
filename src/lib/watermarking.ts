@@ -1,8 +1,8 @@
 /* eslint-disable new-cap */
 /* eslint-disable camelcase */
-import 'jimp/browser/lib/jimp';
 import cv, { Mat } from '@anpanman/opencv_ts';
 import { Buffer } from 'buffer';
+import { getImageDataFromBuffer, getImageBlobUrlFromBuffer, getMeta, getImageBlobUrlFromBlob, getBlobFromImageData } from '../helper/image';
 
 export const status = {
   loaded: false,
@@ -28,18 +28,13 @@ export async function load (): Promise<void> {
   status.loaded = true
 }
 
-function fileToBuffer (file: File): Promise<Buffer> {
+export function fileToBuffer (file: File): Promise<Buffer> {
   const fileReader = new FileReader()
   return new Promise((resolve, reject) => {
     fileReader.readAsArrayBuffer(file)
     fileReader.onerror = reject
     fileReader.onload = () => resolve(Buffer.from(fileReader.result as ArrayBuffer))
   })
-}
-
-async function jimpToFile (source: Jimp, fileName = 'download'): Promise<File> {
-  const buffer = await source.getBufferAsync(source._originalMime)
-  return new File([Buffer.from(buffer).buffer], `${fileName}.${source.getExtension()}`)
 }
 
 function idft (src: Mat, dst: Mat, flags: number, nonzero_rows: number) {
@@ -169,7 +164,7 @@ function getTextFormMat (backImage: Mat, channelIndex: number) {
   return mag
 }
 
-function matToBuffer (mat: Mat) {
+function matToImageData (mat: Mat): ImageData {
   if (!(mat instanceof cv.Mat)) {
     throw new Error('Please input the valid new cv.Mat instance.')
   }
@@ -184,7 +179,7 @@ function matToBuffer (mat: Mat) {
     case cv.CV_8UC4:break
     default:throw new Error('Bad number of channels (Source image must have 1, 3 or 4 channels)')
   }
-  const imgData = Buffer.from(img.data)
+  const imgData = new ImageData(new Uint8ClampedArray(img.data), img.cols);
   img.delete()
   return imgData
 }
@@ -202,7 +197,7 @@ export async function encode (
   watermarkText: string,
   fontSize = 1.1,
   channel: CHANNEL = CHANNEL.B
-):Promise<File> {
+):Promise<string> {
   if (!status.loaded) {
     throw new Error('opencv is not loaded')
   }
@@ -223,19 +218,26 @@ export async function encode (
   } else {
     throw new Error('please use Buffer， arrayBuffer or File')
   }
+  const { type } = getMeta(sourceBuffer);
+  console.log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData start');
+  const imageData = await getImageDataFromBuffer(sourceBuffer);
+  console.log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData end')
+  const srcImg = cv.matFromImageData(imageData);
+  if (srcImg.empty()) { 
+    srcImg.delete();
+    throw new Error('read image failed')
+  }
+  
+  console.log('[web-digital-watermarking]', '[-add-watermark]', 'getSrcImage end')
+  const resultImg = transFormMatWithText(srcImg, watermarkText, fontSize, channel);
+  console.log('[web-digital-watermarking]', '[-add-watermark]', 'add watermark to mat end')
 
-  const jimpSrc = await Jimp.read(sourceBuffer)
-  const srcImg = cv.matFromImageData(jimpSrc.bitmap as unknown as ImageData)
-  if (srcImg.empty()) { throw new Error('read image failed') }
-  const comImg = transFormMatWithText(srcImg, watermarkText, fontSize, channel)
-  const imgRes = new Jimp({
-    width: comImg.cols,
-    height: comImg.rows,
-    data: matToBuffer(comImg)
-  })
-  srcImg.delete()
-  comImg.delete()
-  return jimpToFile(imgRes)
+  const resultImageData = matToImageData(resultImg);
+  console.log('[web-digital-watermarking]', '[-add-watermark]', 'mat to buffer end')
+  srcImg.delete();
+  resultImg.delete();
+  const blob = await getBlobFromImageData(resultImageData, type);
+  return getImageBlobUrlFromBlob(blob);
 }
 
 /**
@@ -245,31 +247,20 @@ export async function encode (
  * @returns
  */
 export async function decode (
-  source: File | ArrayBuffer | Buffer,
+  source: File,
   channel: CHANNEL = CHANNEL.B
 ): Promise<File> {
   if (!status.loaded) {
     throw new Error('opencv is not loaded')
   }
 
-  let sourceBuffer: Buffer
-  if (Buffer.isBuffer(source)) {
-    sourceBuffer = source
-  } else if (source instanceof ArrayBuffer) {
-    sourceBuffer = Buffer.from(source)
-  } else if (source instanceof File) {
-    sourceBuffer = await fileToBuffer(source)
-  } else {
-    throw new Error('please use Buffer， arrayBuffer or File')
-  }
-
-  const jimpSrc = await Jimp.read(sourceBuffer)
+  const jimpSrc = await blob2imageData(source);
   const comImg = cv.matFromImageData(jimpSrc.bitmap as unknown as ImageData)
   const backImage = getTextFormMat(comImg, channel)
   const imgRes = await new Jimp({
     width: backImage.cols,
     height: backImage.rows,
-    data: matToBuffer(backImage)
+    data: matToImageData(backImage)
   })
   comImg.delete()
   backImage.delete()

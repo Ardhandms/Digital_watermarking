@@ -47,6 +47,7 @@
   "dependencies": {
     "@anpanman/opencv_ts": "^1.0.2",
     "buffer": "^6.0.3",
+    "file-type": "^19.0.0",
     "jimp": "^0.22.12"
   }
 }
