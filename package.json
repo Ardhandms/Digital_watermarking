@@ -3,6 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/web-digital-watermarking.umd.cjs",
+  "module": "./dist/web-digital-watermarking.js",
+  "exports": {
+    ".": {
+      "import": "./dist/web-digital-watermarking.js",
+      "require": "./dist/web-digital-watermarking.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -11,5 +22,10 @@
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@anpanman/opencv_ts": "^1.0.2",
+    "buffer": "^6.0.3",
+    "jimp": "^0.22.12"
   }
 }
