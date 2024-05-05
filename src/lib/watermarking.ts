@@ -2,7 +2,12 @@
 /* eslint-disable camelcase */
 import cv, { Mat } from '@anpanman/opencv_ts';
 import { Buffer } from 'buffer';
-import { getImageDataFromBuffer, getImageBlobUrlFromBuffer, getMeta, getImageBlobUrlFromBlob, getBlobFromImageData } from '../helper/image';
+import '../helper/console'
+import { getImageDataFromBuffer, getMeta, getImageBlobUrlFromBlob, getBlobFromImageData } from '../helper/image';
+
+function log(...data: any[]) {
+  if (Reflect.get(window, 'debug')) console.log(...data);
+}
 
 export const status = {
   loaded: false,
@@ -219,21 +224,21 @@ export async function encode (
     throw new Error('please use Buffer， arrayBuffer or File')
   }
   const { type } = getMeta(sourceBuffer);
-  console.log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData start');
+  log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData start');
   const imageData = await getImageDataFromBuffer(sourceBuffer);
-  console.log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData end')
+  log('[web-digital-watermarking]', '[-add-watermark]', 'get imageData end')
   const srcImg = cv.matFromImageData(imageData);
   if (srcImg.empty()) { 
     srcImg.delete();
     throw new Error('read image failed')
   }
   
-  console.log('[web-digital-watermarking]', '[-add-watermark]', 'getSrcImage end')
+  log('[web-digital-watermarking]', '[-add-watermark]', 'getSrcImage end')
   const resultImg = transFormMatWithText(srcImg, watermarkText, fontSize, channel);
-  console.log('[web-digital-watermarking]', '[-add-watermark]', 'add watermark to mat end')
+  log('[web-digital-watermarking]', '[-add-watermark]', 'add watermark to mat end')
 
   const resultImageData = matToImageData(resultImg);
-  console.log('[web-digital-watermarking]', '[-add-watermark]', 'mat to buffer end')
+  log('[web-digital-watermarking]', '[-add-watermark]', 'mat to buffer end')
   srcImg.delete();
   resultImg.delete();
   const blob = await getBlobFromImageData(resultImageData, type);
@@ -246,25 +251,39 @@ export async function encode (
  * @param channel
  * @returns
  */
-export async function decode (
-  source: File,
+export async function decode(
+  source: File | ArrayBuffer | Buffer,
   channel: CHANNEL = CHANNEL.B
-): Promise<File> {
+): Promise<string> {
   if (!status.loaded) {
     throw new Error('opencv is not loaded')
   }
 
-  const jimpSrc = await blob2imageData(source);
-  const comImg = cv.matFromImageData(jimpSrc.bitmap as unknown as ImageData)
-  const backImage = getTextFormMat(comImg, channel)
-  const imgRes = await new Jimp({
-    width: backImage.cols,
-    height: backImage.rows,
-    data: matToImageData(backImage)
-  })
+  let sourceBuffer: Buffer
+  if (Buffer.isBuffer(source)) {
+    sourceBuffer = source
+  } else if (source instanceof ArrayBuffer) {
+    sourceBuffer = Buffer.from(source)
+  } else if (source instanceof File) {
+    sourceBuffer = await fileToBuffer(source)
+  } else {
+    throw new Error('please use Buffer， arrayBuffer or File')
+  }
+
+  log('[web-digital-watermarking]', '[-get-watermark]', 'get imageData start')
+  const imageData = await getImageDataFromBuffer(sourceBuffer);
+  log('[web-digital-watermarking]', '[-get-watermark]', 'get imageData end')
+  const comImg = cv.matFromImageData(imageData)
+  log('[web-digital-watermarking]', '[-get-watermark]', 'get comImg end')
+  const resultImage = getTextFormMat(comImg, channel)
+  log('[web-digital-watermarking]', '[-get-watermark]', 'get resultImage end')
+  const resultImageData = matToImageData(resultImage);
   comImg.delete()
-  backImage.delete()
-  return jimpToFile(imgRes)
+  resultImage.delete()
+
+  const blob = await getBlobFromImageData(resultImageData)
+
+  return getImageBlobUrlFromBlob(blob);
 }
 
 export default {

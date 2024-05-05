@@ -7,7 +7,11 @@ import { decode, encode, status, load } from './lib/watermarking';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="app_container">
-    <h1><img src="${typescriptLogo}" />Online Web Digital Watermarking</h1>
+    <h1 style="display: flex;align-items: center;">
+      <img src="${typescriptLogo}" style="margin-right: 8px;" />
+      Online Web Digital Watermarking
+      <img id="opencv" style="height: 32px;margin-left: 8px;filter: grayscale(1);" src="https://opencv.org/wp-content/uploads/2022/05/logo.png"/>
+    </h1>
     <div>
       <input id="input" type="file" accept="image/gif, image/png, image/jpg, image/jpeg, image/svg" />
       <label>Watermark text: </label><input id="watermark" type="text" maxlength="10" placeholder="watermark" />
@@ -36,6 +40,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   console.log('load opencv');
   try {
     await load();
+    (document.querySelector('#opencv') as HTMLImageElement).style.filter = 'grayscale(0)';
     console.log('load opencv success');
   } catch(e) {
     console.error(e);
@@ -60,13 +65,25 @@ if (input) {
       const watermarkEl = document.getElementById('watermark') as HTMLInputElement;
 
       console.log('start add watermark to file');
+      console.time('encode');
       const url = await encode(file, watermarkEl.value || 'watermark');
-      console.log('add watermark to file surrcee');
+      console.timeEnd('encode')
+      console.log('add watermark to file success');
 
       // 加载结果
-      const result = document.querySelector('#encode_result img') as HTMLImageElement;
-      result.src = url;
-      new Viewer(result)
+      const encodeResultImage = document.querySelector('#encode_result img') as HTMLImageElement;
+      encodeResultImage.src = url;
+      new Viewer(encodeResultImage)
+
+      // 加载解码结果
+      const fetchResult = await fetch(url)
+      const arrayBuffer = await fetchResult.arrayBuffer();
+      console.time('decode')
+      const decodeResult = await decode(arrayBuffer);
+      console.timeEnd('decode')
+      const decodeResultImage = document.querySelector('#decode_result img') as HTMLImageElement;
+      decodeResultImage.src = decodeResult;
+      new Viewer(decodeResultImage);
     }
   }
 }

@@ -1,7 +1,6 @@
 /**
  * console.log()
  */
-
 const originConsoleLog = window.console.log;
 window.console.log = function(...data) {
   const time = new Date();
