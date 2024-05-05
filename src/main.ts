@@ -5,6 +5,8 @@ import './helper/console'
 import typescriptLogo from './typescript.svg'
 import { decode, encode, status, load } from './lib/watermarking';
 
+Reflect.set(window, 'debug', true);
+
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="app_container">
     <h1 style="display: flex;align-items: center;">
