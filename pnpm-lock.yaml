@@ -19,6 +19,9 @@ devDependencies:
   typescript:
     specifier: ^5.2.2
     version: 5.4.5
+  viewerjs:
+    specifier: ^1.11.6
+    version: 1.11.6
   vite:
     specifier: ^5.2.0
     version: 5.2.11
@@ -1586,6 +1589,10 @@ packages:
   /validator@13.11.0:
     resolution: {integrity: sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==}
     engines: {node: '>= 0.10'}
+    dev: true
+
+  /viewerjs@1.11.6:
+    resolution: {integrity: sha512-TlhdSp2oEOLFXvEp4psKaeTjR5zBjTRcM/sHUN8PkV1UWuY8HKC8n7GaVdW5Xqnwdr/F1OmzLik1QwDjI4w/nw==}
     dev: true
 
   /vite-plugin-dts@3.9.0(typescript@5.4.5)(vite@5.2.11):
