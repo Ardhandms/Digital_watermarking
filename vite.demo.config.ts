@@ -8,5 +8,6 @@ export default defineConfig({
     base: '/web-digital-watermarking',
     ...config,
     build: {
+        outDir: 'demo',
     }
 })
