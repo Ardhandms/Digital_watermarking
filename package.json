@@ -1,5 +1,5 @@
 {
-  "name": "web-digital-watermarking",
+  "name": "@mizuka-wu/web-digital-watermarking",
   "sideEffects": false,
   "version": "1.0.0",
   "type": "module",
@@ -21,7 +21,7 @@
   "files": [
     "dist"
   ],
-  "types": "./dist/watermarking.d.ts",
+  "types": "./dist/lib/watermarking.d.ts",
   "main": "./dist/web-digital-watermarking.umd.cjs",
   "module": "./dist/web-digital-watermarking.js",
   "exports": {

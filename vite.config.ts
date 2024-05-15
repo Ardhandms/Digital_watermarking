@@ -9,7 +9,7 @@ export default defineConfig({
         target: 'esnext',
         lib: {
             entry: resolve(__dirname, './src/lib/watermarking.ts'),
-            name: 'web-digital-watermarking',
+            name: '@mizuka-wu/web-digital-watermarking',
             fileName: 'web-digital-watermarking'
         }
     },
