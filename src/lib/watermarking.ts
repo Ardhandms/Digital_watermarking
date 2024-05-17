@@ -1,5 +1,3 @@
-/* eslint-disable new-cap */
-/* eslint-disable camelcase */
 import cv, { Mat } from '@anpanman/opencv_ts';
 import { Buffer } from 'buffer';
 import '../helper/console'
@@ -21,7 +19,7 @@ export enum CHANNEL {
 }
 
 /**
- * 加载opencv
+ * Memuat si OpenCV
  */
 export async function load (): Promise<void> {
   if (status.loaded || status.loading) {
@@ -120,7 +118,7 @@ function transFormMatWithText (srcImg: Mat, watermarkText: string, fontSize: num
   const padded = getChannel(srcImg, channelIndex)
   padded.convertTo(padded, cv.CV_32F)
   const comImg = getDftMat(padded)
-  // add text
+  // add sebuah text
   const center = new cv.Point(padded.cols / 2, padded.rows / 2)
   addTextByMat(comImg, watermarkText, center, fontSize)
   const outer = new cv.Point(45, 45)
@@ -132,8 +130,7 @@ function transFormMatWithText (srcImg: Mat, watermarkText: string, fontSize: num
   invDFT.convertTo(restoredImage, cv.CV_8U)
   const backPlanes = new cv.MatVector()
   cv.split(srcImg, backPlanes)
-  // backPlanes.erase(backPlanes.get(0));
-  // backPlanes.insert(backPlanes.get(0), restoredImage);
+
   backPlanes.set(0, restoredImage)
   const backImage = new cv.Mat()
   cv.merge(backPlanes, backImage)
@@ -150,12 +147,12 @@ function getTextFormMat (backImage: Mat, channelIndex: number) {
   padded.convertTo(padded, cv.CV_32F)
   const comImg = getDftMat(padded)
   const backPlanes = new cv.MatVector()
-  // split the comples image in two backPlanes
+  // split comples gambar menjadi 2 backPlanes
   cv.split(comImg, backPlanes)
   const mag = new cv.Mat()
-  // compute the magnitude
+  // compute si magnitude nya
   cv.magnitude(backPlanes.get(0), backPlanes.get(1), mag)
-  // move to a logarithmic scale
+  // Pindahkan ke logarithmic scale
   const matOne = cv.Mat.ones(mag.size(), cv.CV_32F)
   cv.add(matOne, mag, mag)
   cv.log(mag, mag)
@@ -190,7 +187,7 @@ function matToImageData (mat: Mat): ImageData {
 }
 
 /**
- * 编码
+ * 
  * @param source
  * @param watermarkText
  * @param fontSize
@@ -246,7 +243,7 @@ export async function encode (
 }
 
 /**
- * 解码
+ * 
  * @param source
  * @param channel
  * @returns

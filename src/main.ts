@@ -1,22 +1,19 @@
 import Viewer from 'viewerjs';
 import 'viewerjs/dist/viewer.min.css';
-import './style.css'
 import './helper/console'
-import typescriptLogo from './typescript.svg'
+import './style.css'
 import { decode, encode, status, load } from './lib/watermarking';
 
 Reflect.set(window, 'debug', true);
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div id="app_container">
+<div id="app_container">
     <h1 style="display: flex;align-items: center;">
-      <img src="${typescriptLogo}" style="margin-right: 8px;" />
-      Online Web Digital Watermarking
-      <img id="opencv" style="height: 32px;margin-left: 8px;filter: grayscale(1);" src="https://opencv.org/wp-content/uploads/2022/05/logo.png"/>
+      Digital Watermarking Gambar
     </h1>
     <div>
+    <label>Watermark text: </label><input id="watermark" type="text" maxlength="10" placeholder="watermark" />
       <input id="input" type="file" accept="image/gif, image/png, image/jpg, image/jpeg, image/svg" />
-      <label>Watermark text: </label><input id="watermark" type="text" maxlength="10" placeholder="watermark" />
     </div>
 
     <div id="info">
@@ -29,13 +26,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <div id="decode_result">
           <img />
         </div>
-      </div>
-      <div id="logs">
-        <h3>Logs</h3>
-        <textarea readonly></textarea>
+        <button id="reset" style="margin-left: 10px;">Reset</button>
       </div>
     </div>
-  </div>
+  </div>    
 `;
 
 (async () => {
@@ -72,12 +66,12 @@ if (input) {
       console.timeEnd('encode')
       console.log('add watermark to file success');
 
-      // 加载结果
+      // Memuat hasi;
       const encodeResultImage = document.querySelector('#encode_result img') as HTMLImageElement;
       encodeResultImage.src = url;
       new Viewer(encodeResultImage)
 
-      // 加载解码结果
+      // Memuat hasil deskripsi
       const fetchResult = await fetch(url)
       const arrayBuffer = await fetchResult.arrayBuffer();
       console.time('decode')
@@ -88,4 +82,20 @@ if (input) {
       new Viewer(decodeResultImage);
     }
   }
+  const resetButton = document.querySelector<HTMLButtonElement>('#reset');
+    if (resetButton) {
+      resetButton.onclick = () => {
+        const watermarkEl = document.getElementById('watermark') as HTMLInputElement;
+        const encodeResultImage = document.querySelector('#encode_result img') as HTMLImageElement;
+        const decodeResultImage = document.querySelector('#decode_result img') as HTMLImageElement;
+        const inputFile = document.querySelector<HTMLInputElement>('#input');
+
+        watermarkEl.value = '';
+        encodeResultImage.src = '';
+        decodeResultImage.src = '';
+        if (inputFile) inputFile.value = '';
+        
+        console.log('reset completed');
+      }
+    }
 }

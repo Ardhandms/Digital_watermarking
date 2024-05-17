@@ -1,5 +1,5 @@
 {
-  "name": "@mizuka-wu/web-digital-watermarking",
+  "name": "@Ardhan",
   "sideEffects": false,
   "version": "1.0.0",
   "type": "module",
@@ -7,19 +7,6 @@
     "digital-watermarking",
     "watermarking",
     "opencv"
-  ],
-  "license": "MIT",
-  "author": {
-    "email": "mizuka.wu@outlook.com",
-    "name": "mizuka.wu",
-    "url": "https://www.mizuka.top"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:mizuka-wu/web-digital-watermarking.git"
-  },
-  "files": [
-    "dist"
   ],
   "types": "./dist/lib/watermarking.d.ts",
   "main": "./dist/web-digital-watermarking.umd.cjs",
@@ -48,6 +35,7 @@
     "@anpanman/opencv_ts": "^1.0.2",
     "buffer": "^6.0.3",
     "file-type": "^19.0.0",
-    "jimp": "^0.22.12"
+    "jimp": "^0.22.12",
+    "web-digital-watermarking": "^0.0.6"
   }
 }

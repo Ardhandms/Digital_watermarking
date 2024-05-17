@@ -1,66 +1,73 @@
-html, body, #app{
-  width: 100%;
-  height: 100%;
+body {
+  font-family: Arial, sans-serif;
+  background-color: #d5eafc;
   margin: 0;
-}
-
-#app {
-  padding: 8px;
-  box-sizing: border-box;
+  padding: 0;
 }
 
 #app_container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #333;
+}
+
+input[type="text"] {
+  width: 95%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="file"] {
+  width: 95%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 2px dashed #aaa;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 #info {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  margin-top: 20px;
 }
 
-#logs{
-  width: 400px;
-  height: 100%;
+#result {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
-#logs>textarea {
-  resize: none;
-  overflow-y: auto;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+#result h3 {
+  width: 95%;
+  margin-top: 20px;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 5px;
+}
+
+#encode_result,
+#decode_result {
   width: 100%;
-  flex: 1;
-  box-sizing: border-box;
-  padding: 16px;
+  margin-right: 5%;
 }
 
-#info #result{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin-right: 16px;
-}
-
-#decode_result, #encode_result {
-  flex: 1;
-  overflow: hidden;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#decode_result img, #encode_result img {
+#encode_result img,
+#decode_result img {
   max-width: 100%;
-  max-height: 100%;
-  padding: 20px;
-  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+}
+
+/* Style untuk gambar yang dibuka dengan viewer.js */
+.viewer-container img {
+  max-width: none;
+  box-shadow: none;
+  border-radius: 0;
 }
