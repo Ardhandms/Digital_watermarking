@@ -12,7 +12,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       Digital Watermarking Gambar
     </h1>
     <div>
-    <label>Watermark text: </label><input id="watermark" type="text" maxlength="10" placeholder="watermark" />
+    <label>Watermark text: </label><input id="watermark" type="text" maxlength="10" placeholder="Masukan teks watermark anda disini" />
       <input id="input" type="file" accept="image/gif, image/png, image/jpg, image/jpeg, image/svg" />
     </div>
 
