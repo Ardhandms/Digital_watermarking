@@ -1,21 +1,27 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #d5eafc;
   margin: 0;
   padding: 0;
+  background-color: #2c2552;
+  font-family: Arial, sans-serif;
+  background: url('ungu.jpg') ;
+  overflow: auto;
+  overflow-x: hidden;
+  background-color: #2c2552;
+  background-size: cover;
+  background-position: center;
+ 
 }
 
 #app_container {
   max-width: 600px;
-  margin: 20px auto;
-  background-color: #fff;
+  margin: 20px auto;background: linear-gradient(to bottom, #2c2552 0%, #3f2a6a 33%, #8310a7d0 66%, #a150d0 100%);
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 10 10 15 5px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  color: #333;
+  color: #fffffff3;
 }
 
 input[type="text"] {
